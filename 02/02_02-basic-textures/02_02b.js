@@ -29,17 +29,6 @@ function init() {
     cloudMesh.name = 'clouds';
     scene.add(cloudMesh);
 
-    // now add some better lighting
-    var ambientLight = new THREE.AmbientLight(0x111111);
-    ambientLight.name='ambient';
-    scene.add(ambientLight);
-
-    // add sunlight (light
-    var directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position = new THREE.Vector3(100,10,-50);
-    directionalLight.name='directional';
-    scene.add(directionalLight);
-
     camera.position.x = 25;
     camera.position.y = 26;
     camera.position.z = 23;
@@ -47,16 +36,12 @@ function init() {
 
     cameraControl = new THREE.OrbitControls(camera);
 
-
     control = new function () {
         this.rotationSpeed = 0.001;
-        this.ambientLightColor = ambientLight.color.getHex();
-        this.directionalLightColor = directionalLight.color.getHex();
     };
 
     addControlGui(control);
     addStatsObject();
-
 
     document.body.appendChild(renderer.domElement);
 
@@ -66,7 +51,7 @@ function init() {
 function createEarthMaterial() {
     var earthTexture = THREE.ImageUtils.loadTexture("../../assets/textures/planets/earthmap4k.jpg");
 
-    var earthMaterial = new THREE.MeshPhongMaterial();
+    var earthMaterial = new THREE.MeshBasicMaterial();
     earthMaterial.map = earthTexture;
 
     return earthMaterial;
@@ -85,9 +70,6 @@ function createCloudMaterial() {
 function addControlGui(controlObject) {
     var gui = new dat.GUI();
     gui.add(controlObject, 'rotationSpeed', -0.01, 0.01);
-    gui.addColor(controlObject, 'ambientLightColor');
-    gui.addColor(controlObject, 'directionalLightColor');
-
 }
 
 function addStatsObject() {
@@ -110,8 +92,6 @@ function render() {
 
     scene.getObjectByName('earth').rotation.y+=control.rotationSpeed;
     scene.getObjectByName('clouds').rotation.y+=control.rotationSpeed*1.1;
-    scene.getObjectByName('ambient').color = new THREE.Color(control.ambientLightColor);
-    scene.getObjectByName('directional').color = new THREE.Color(control.directionalLightColor);
 
     renderer.render(scene, camera);
 
